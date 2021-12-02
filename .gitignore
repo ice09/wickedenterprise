@@ -1,5 +1,6 @@
 # Default ignored files
 /.idea
+/docker-compose-fullstack
 **/target
 /shelf/
 /.idea/workspace.xml
