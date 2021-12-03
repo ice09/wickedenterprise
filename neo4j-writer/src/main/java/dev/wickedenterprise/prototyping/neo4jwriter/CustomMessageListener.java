@@ -13,6 +13,7 @@ public class CustomMessageListener {
 
     public CustomMessageListener(GraphUpdateService graphUpdateService) {
         this.graphUpdateService = graphUpdateService;
+        graphUpdateService.createIndex();
     }
 
     @RabbitListener(queues = Neo4jWriterApplication.queueName)

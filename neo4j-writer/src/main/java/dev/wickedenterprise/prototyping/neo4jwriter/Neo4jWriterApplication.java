@@ -7,7 +7,6 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class Neo4jWriterApplication implements CommandLineRunner {
+public class Neo4jWriterApplication {
 
 	static final String topicExchangeName = "evm-events";
 	static final String queueName = "graph-update";
@@ -58,8 +57,4 @@ public class Neo4jWriterApplication implements CommandLineRunner {
 		SpringApplication.run(Neo4jWriterApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		graphUpdateService.createIndex();
-	}
 }

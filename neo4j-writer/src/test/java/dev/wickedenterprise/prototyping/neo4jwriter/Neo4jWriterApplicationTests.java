@@ -26,13 +26,18 @@ public class Neo4jWriterApplicationTests {
 			TestPropertyValues.of(
 					"spring.rabbitmq.addresses=" + rabbitMQContainer.getAmqpUrl(),
 					"spring.rabbitmq.username=" + rabbitMQContainer.getAdminUsername(),
-					"spring.rabbitmq.password=" + rabbitMQContainer.getAdminPassword()
+					"spring.rabbitmq.password=" + rabbitMQContainer.getAdminPassword(),
+					"spring.neo4j.uri=" + neo4jContainer.getBoltUrl(),
+					"spring.neo4j.authentication.username=neo4j",
+					"spring.neo4j.authentication.password=neo",
+					"spring.data.neo4j.database=neo4j"
+
 			).applyTo(configurableApplicationContext.getEnvironment());
 		}
 	}
 
 	@ClassRule
-	public static Neo4jContainer neo4jContainer = new Neo4jContainer("neo4j").withAdminPassword(null);
+	public static Neo4jContainer neo4jContainer = new Neo4jContainer("neo4j").withAdminPassword("neo");
 
 	@Test
 	public void contextLoads() {
