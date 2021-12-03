@@ -52,4 +52,12 @@ public class GraphUpdateService {
 							"blockNumber", logEntry.getBlockNumber().longValue(), "amount", logEntry.getAmount().longValue()) );
 		}
 	}
+
+	public void createIndex() {
+		try (Session session = sessionFor(database())) {
+			String stmt =
+					"CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.address IS UNIQUE";
+			session.run( stmt );
+		}
+	}
 }

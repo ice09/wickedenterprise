@@ -36,8 +36,6 @@ public class RdbmsWriterApplicationTests {
 		}
 	}
 
-
-
 	@ClassRule
 	public static PostgreSQLContainer postgresContainer = new PostgreSQLContainer("postgres").withUsername("events").withPassword("events").withDatabaseName("events");
 
@@ -46,25 +44,5 @@ public class RdbmsWriterApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		/* Check for unique addresses, should be equal to "Users" in neo4j DB
-		List<LogEntryEntity> allentries = logEntryRepository.findAll();
-		log.info("Number of entries: " + allentries.size());
-		Set<String> uniqueTee = allentries.stream().map(it -> it.trusteeAddress).collect(Collectors.toSet());
-		Set<String> uniqueTre = allentries.stream().map(it -> it.trusterAddress).collect(Collectors.toSet());
-		log.info("Unique Trustees: " + uniqueTee.size());
-		log.info("Unique Trusters: " + uniqueTre.size());
-		Set<String> allUnique = new HashSet<>();
-		allUnique.addAll(uniqueTre);
-		allUnique.addAll(uniqueTee);
-		log.info("Unique all: " + allUnique.size());
-		 */
-
-		/* Check for unique trustlines, should be equal to "TRUSTS" in neo4j DB
-		List<LogEntryEntity> allentries = logEntryRepository.findAll();
-		Set<String> distinctTreTee = allentries.stream().map(it -> it.getTrusteeAddress() + it.getTrusterAddress()).collect(Collectors.toSet());
-		log.info("Distinct (J8-Stream-Version), TRUSTS in neo4j: " + distinctTreTee.size());
-		long numberFromDb = logEntryRepository.countDistinctByTrusteeAndTrusterAddress();
-		log.info("Distinct (JPA-Data-Version),  TRUSTS in neo4j: " + numberFromDb);
-		*/
 	}
 }
