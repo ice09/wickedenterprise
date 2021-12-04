@@ -15,7 +15,7 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Maven Package
-        run: mvn -B clean package -DskipTests
+        run: mvn -B clean spring-boot:build-image
       - name: Maven Verify
         run: mvn -B clean verify
 
@@ -33,7 +33,9 @@ jobs:
           java-version: 11.0.4
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
-      - name: Build Docker image
-        run: docker build -t wickedenterprise-dlt:latest -t wickedenterprise-dlt:${GITHUB_SHA::8} .
-      - name: Publish Docker image
-        run: docker push wickedenterprise-dlt
+      - name: Publish Docker image neo4j
+        run: docker push neo4j-writer:0.0.1-SNAPSHOT
+      - name: Publish Docker image rdbms
+        run: docker push rdbms-writer:0.0.1-SNAPSHOT
+      - name: Publish Docker image listener
+        run: docker push blockchain-listener:0.0.1-SNAPSHOT
