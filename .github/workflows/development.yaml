@@ -20,9 +20,18 @@ jobs:
         run: mvn -B clean spring-boot:build-image
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
+      - name: Tag image
+        run: docker image tag docker.io/library/neo4j-writer:0.0.1-SNAPSHOT ice0nine/wicked
+  enterprise-dlt:neo4j-writer
       - name: Publish Docker image neo4j
         run: docker push ice0nine/wickedenterprise-dlt:neo4j-writer
+      - name: Tag image
+        run: docker image tag docker.io/library/rdbms-writer:0.0.1-SNAPSHOT ice0nine/wicked
+  enterprise-dlt:rdbms-writer
       - name: Publish Docker image rdbms
         run: docker push ice0nine/wickedenterprise-dlt:rdbms-writer
+      - name: Tag image
+        run: docker image tag docker.io/library/blockchain-listener:0.0.1-SNAPSHOT ice0nine/wicked
+  enterprise-dlt:blockchain-listener
       - name: Publish Docker image listener
         run: docker push ice0nine/wickedenterprise-dlt:blockchain-listener
