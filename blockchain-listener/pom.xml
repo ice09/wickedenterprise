@@ -83,10 +83,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<image>
-						<builder>openjdk:11-jdk</builder>
-						<runImage>openjdk:11-jdk</runImage>
-					</image>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
