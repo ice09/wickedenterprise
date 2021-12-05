@@ -1,12 +1,20 @@
-## Setup
+### Build
+
+* Run `mvn spring-boot:build-image`
+
+### Setup
 
 * Start Nethermind: 
   * `.\Nethermind.Launcher.exe --JsonRpc.Enabled true --JsonRpc.Timeout 200000000`
   
-## Run
+### Run
 
 * cd `docker-compose-fullstack`
 * `docker-compose up -d` 
+
+### Healthcheck
+
+* Call http://localhost:8080/actuator/health
 
 ### Manual Index Creation
 
