@@ -36,8 +36,12 @@ public class BlockchainListenerApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) throws IOException {
+	public void run(String... args) {
 		BigInteger lastProcessedBlock = batchContractEventPull.runBatch();
-		scheduledContractEventPull.setLastProcessedBlock(lastProcessedBlock);
+		if (!lastProcessedBlock.equals(BigInteger.ZERO)) {
+			scheduledContractEventPull.setLastProcessedBlock(lastProcessedBlock);
+		} else {
+			throw new IllegalStateException("Cannot read from web3j. Aborting.");
+		}
 	}
 }

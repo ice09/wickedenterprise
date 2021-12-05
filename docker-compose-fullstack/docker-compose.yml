@@ -4,7 +4,7 @@ services:
   blockchain-listener-fs:
     image: blockchain-listener:0.0.1-SNAPSHOT
     container_name: blockchain-listener-fs
-    restart: on-failure
+    restart: on-failure:3
     depends_on:
       - neo4j-writer-fs
       - rdbms-writer-fs
