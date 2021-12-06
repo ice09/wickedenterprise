@@ -2,7 +2,7 @@ version: '3'
 services:
 
   blockchain-listener-fs:
-    image: blockchain-listener:0.0.1-SNAPSHOT
+    image: ice0nine/wickedenterprise-dlt:blockchain-listener
     container_name: blockchain-listener-fs
     restart: on-failure
     depends_on:
@@ -15,7 +15,7 @@ services:
       - RABBIT_MQ_ADDRESS=rabbitmq-fs
       - RABBIT_MQ_USER=guest
       - RABBIT_MQ_PASSWORD=guest
-      - ETHEREUM_NODE_IP_PORT=host.docker.internal:8545
+      - ETHEREUM_NODE_IP_PORT=host.minikube.internal:8545
       - START_BLOCK=12529458
  
   postgres-fs:
@@ -31,7 +31,7 @@ services:
       - 5432:5432
 
   rdbms-writer-fs:
-    image: rdbms-writer:0.0.1-SNAPSHOT
+    image: ice0nine/wickedenterprise-dlt:rdbms-writer
     container_name: rdbms-writer-fs
     restart: on-failure
     depends_on:
@@ -64,7 +64,7 @@ services:
       - NEO4J_AUTH=neo4j/neo
 
   neo4j-writer-fs:
-    image: neo4j-writer:0.0.1-SNAPSHOT
+    image: ice0nine/wickedenterprise-dlt:neo4j-writer
     container_name: neo4j-writer-fs
     restart: on-failure
     depends_on:
@@ -84,8 +84,3 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics -q status
-      interval: 30s
-      timeout: 30s
-      retries: 3
