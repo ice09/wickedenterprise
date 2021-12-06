@@ -36,7 +36,8 @@ public class BlockchainListenerApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) {
+	public void run(String... args) throws InterruptedException {
+		batchContractEventPull.waitForExternalSystems();
 		BigInteger lastProcessedBlock = batchContractEventPull.runBatch();
 		if (!lastProcessedBlock.equals(BigInteger.ZERO)) {
 			scheduledContractEventPull.setLastProcessedBlock(lastProcessedBlock);
