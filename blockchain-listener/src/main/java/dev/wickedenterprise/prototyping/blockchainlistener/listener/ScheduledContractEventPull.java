@@ -22,12 +22,16 @@ public class ScheduledContractEventPull {
     public void processContractEvents() {
         if (lastProcessedBlock.intValue() > 0) {
             BigInteger currentBlock = contractEventPull.getCurrentBlock();
-            log.info("Processing blocks {} to {}", lastProcessedBlock, currentBlock);
-            try {
-                contractEventPull.readEventsFromContract(lastProcessedBlock, contractEventPull.getCurrentBlock());
-                lastProcessedBlock = currentBlock;
-            } catch (Exception ex) {
-                log.error("Error in reading events: " + ex.getMessage());
+            if (currentBlock.intValue() > 0) {
+                log.info("Processing blocks {} to {}", lastProcessedBlock, currentBlock);
+                try {
+                    contractEventPull.readEventsFromContract(lastProcessedBlock, contractEventPull.getCurrentBlock());
+                    lastProcessedBlock = currentBlock;
+                } catch (Exception ex) {
+                    log.error("Error in reading events: " + ex.getMessage());
+                }
+            } else {
+                log.info("Cannot retrieve current Block, aborting this schedule.");
             }
         } else {
             log.info("Still in batch processing. Skipping Scheduler.");
