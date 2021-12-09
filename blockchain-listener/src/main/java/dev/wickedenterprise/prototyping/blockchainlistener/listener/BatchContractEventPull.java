@@ -67,10 +67,19 @@ public class BatchContractEventPull {
                 log.info("Processed blocks {} to {}", index, to);
                 index = index.add(step);
             } catch (Exception ex) {
-                log.error("Error while processing events: " + ex.getMessage());
+                log.error("Error while processing events: " + ex.getMessage() + ", timeout 5 secs.");
+                waitFor5Seconds();
             }
         }
         return currentBlock;
+    }
+
+    private void waitFor5Seconds() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            log.error("Thread exception", e);
+        }
     }
 
 }
