@@ -65,7 +65,7 @@ public class ContractEventPull {
         try {
             return httpWeb3j.ethBlockNumber().send().getBlockNumber();
         } catch (Exception e) {
-            log.error("Cannot read current block number.", e);
+            log.error("Cannot read current block number: {}", e.getMessage());
             return BigInteger.ZERO;
         }
     }
