@@ -2,7 +2,6 @@ package dev.wickedenterprise.prototyping.blockchainlistener.listener;
 
 import dev.wickedenterprise.Hub;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.web3j.abi.EventEncoder;
@@ -65,7 +64,7 @@ public class ContractEventPull {
     public BigInteger getCurrentBlock() {
         try {
             return httpWeb3j.ethBlockNumber().send().getBlockNumber();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Cannot read current block number.", e);
             return BigInteger.ZERO;
         }
