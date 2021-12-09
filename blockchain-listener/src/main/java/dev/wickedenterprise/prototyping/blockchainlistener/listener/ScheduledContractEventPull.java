@@ -23,12 +23,16 @@ public class ScheduledContractEventPull {
         if (lastProcessedBlock.intValue() > 0) {
             BigInteger currentBlock = contractEventPull.getCurrentBlock();
             if (currentBlock.intValue() > 0) {
-                log.info("Processing blocks {} to {}", lastProcessedBlock, currentBlock);
-                try {
-                    contractEventPull.readEventsFromContract(lastProcessedBlock, contractEventPull.getCurrentBlock());
-                    lastProcessedBlock = currentBlock;
-                } catch (Exception ex) {
-                    log.error("Error in reading events: " + ex.getMessage());
+                if (currentBlock.intValue() < lastProcessedBlock.intValue()) {
+                    log.info("Processing blocks {} to {}", lastProcessedBlock, currentBlock);
+                    try {
+                        contractEventPull.readEventsFromContract(lastProcessedBlock, currentBlock);
+                        lastProcessedBlock = currentBlock;
+                    } catch (Exception ex) {
+                        log.error("Error in reading events: " + ex.getMessage());
+                    }
+                } else {
+                    log.info("Current Block is below latest processed Block, aborting this schedule.");
                 }
             } else {
                 log.info("Cannot retrieve current Block, aborting this schedule.");
