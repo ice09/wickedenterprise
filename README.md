@@ -1,3 +1,5 @@
+![](docs/img/prototyping-overview.png)
+
 ### Build
 
 * Run `mvn spring-boot:build-image`

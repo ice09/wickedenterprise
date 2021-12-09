@@ -25,7 +25,7 @@ public class ContractEventPull {
     private final Web3j httpWeb3j;
     private final EventPushService eventPushService;
 
-    public ContractEventPull(Web3j httpWeb3j, Hub hub, @Value("${start.block}") BigInteger startBlock, EventPushService eventPushService) {
+    public ContractEventPull(Web3j httpWeb3j, Hub hub, EventPushService eventPushService) {
         this.hub = hub;
         this.httpWeb3j = httpWeb3j;
         this.eventPushService = eventPushService;
