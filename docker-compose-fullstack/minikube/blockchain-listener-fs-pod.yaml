@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blockchain-listener-fs
+  name: blockchain-listener-fs
+spec:
+  containers:
+    - env:
+        - name: ETHEREUM_NODE_IP_PORT
+          value: host.minikube.internal:8545
+        - name: RABBIT_MQ_ADDRESS
+          value: rabbitmq-fs
+        - name: RABBIT_MQ_PASSWORD
+          value: guest
+        - name: RABBIT_MQ_USER
+          value: guest
+        - name: START_BLOCK
+          value: "19000000"
+      image: ice0nine/wickedenterprise-dlt:blockchain-listener
+      name: blockchain-listener-fs
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 8080
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 10
+        timeoutSeconds: 2
+        periodSeconds: 3
+        failureThreshold: 1
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 8080
+        initialDelaySeconds: 20
+        timeoutSeconds: 2
+        periodSeconds: 8
+        failureThreshold: 1
+      resources: {}
+  restartPolicy: OnFailure
+status: {}

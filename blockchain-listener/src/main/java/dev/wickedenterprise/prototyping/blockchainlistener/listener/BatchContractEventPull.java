@@ -1,8 +1,6 @@
 package dev.wickedenterprise.prototyping.blockchainlistener.listener;
 
-import dev.wickedenterprise.prototyping.blockchainlistener.BlockchainListenerApplication;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +13,12 @@ public class BatchContractEventPull {
     private final ContractEventPull contractEventPull;
     private final BigInteger startBlock;
     private final BigInteger step;
-    private final RabbitTemplate rabbitTemplate;
+    private final HealthIndicatorUtil healthIndicatorUtil;
 
-    public BatchContractEventPull(@Value("${start.block}") BigInteger startBlock, EventPushService eventPushService, ContractEventPull contractEventPull, RabbitTemplate rabbitTemplate) {
+    public BatchContractEventPull(@Value("${start.block}") BigInteger startBlock, ContractEventPull contractEventPull, HealthIndicatorUtil healthIndicatorUtil) {
         this.contractEventPull = contractEventPull;
         this.startBlock = startBlock;
-        this.rabbitTemplate = rabbitTemplate;
+        this.healthIndicatorUtil = healthIndicatorUtil;
         this.step = BigInteger.valueOf(10000);
     }
 
@@ -28,29 +26,16 @@ public class BatchContractEventPull {
         boolean rabbitAvailable;
         boolean ethereumNodeAvailable;
         for (int i=0; i<100; i++) {
-            rabbitAvailable = sendZeroTransactionToAllQueues();
-            BigInteger currentBlock = contractEventPull.getCurrentBlock();
-            ethereumNodeAvailable = currentBlock.intValue() > 0;
+            rabbitAvailable = healthIndicatorUtil.canSendTransactionsToQueues();
+            ethereumNodeAvailable = healthIndicatorUtil.isConnectedToWeb3();
             if (rabbitAvailable && ethereumNodeAvailable) {
                 log.info("Ready for Takeoff.");
                 return;
             } else {
-                log.info("Still waiting for external System startup, rabbitAvailable {}, Current Ethereum Block {}, Try {}/100", rabbitAvailable, currentBlock, i);
+                log.info("Still waiting for external System startup, rabbitAvailable {}, web3Available {}, Try {}/100", rabbitAvailable, ethereumNodeAvailable, i);
                 Thread.sleep(5000);
             }
         }
-    }
-
-    private boolean sendZeroTransactionToAllQueues() {
-        try {
-            LogEntry logEntry = new LogEntry.LogEntryBuilder().trusterAddress("0x0").trusteeAddress("0x0").amount(BigInteger.ZERO).blockNumber(BigInteger.ZERO).build();
-            rabbitTemplate.convertAndSend(BlockchainListenerApplication.topicExchangeName, BlockchainListenerApplication.rdbmsRouteName, logEntry);
-            rabbitTemplate.convertAndSend(BlockchainListenerApplication.topicExchangeName, BlockchainListenerApplication.graphRouteName, logEntry);
-        } catch (Exception ex) {
-            log.error("Cannot send Zero Transaction Object to Queues: " + ex.getMessage(), ex);
-            return false;
-        }
-        return true;
     }
 
     public BigInteger runBatch()  {
