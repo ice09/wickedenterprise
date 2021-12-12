@@ -18,8 +18,10 @@ public class ListenerHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
+        log.info("Healthcheck called.");
         boolean isConnectedToWeb3 = healthIndicatorUtil.isConnectedToWeb3();
         boolean canSendToQueues = healthIndicatorUtil.canSendTransactionsToQueues();
+        log.info("Status {}, {}", isConnectedToWeb3, canSendToQueues);
         if (isConnectedToWeb3 && canSendToQueues) {
             return Health.up().build();
         } else {
