@@ -23,25 +23,25 @@ spec:
           value: "19000000"
       image: ice0nine/wickedenterprise-dlt:blockchain-listener
       name: blockchain-listener-fs
-      imagePullPolicy: Never
+      imagePullPolicy: Always
       ports:
         - containerPort: 8080
       readinessProbe:
         httpGet:
-          path: /health
+          path: /actuator/health
           port: 8080
-        initialDelaySeconds: 10
-        timeoutSeconds: 2
+        initialDelaySeconds: 60
+        timeoutSeconds: 10
         periodSeconds: 3
         failureThreshold: 1
       livenessProbe:
         httpGet:
-          path: /health
+          path: /actuator/health
           port: 8080
-        initialDelaySeconds: 20
-        timeoutSeconds: 2
+        initialDelaySeconds: 60
+        timeoutSeconds: 10
         periodSeconds: 8
         failureThreshold: 1
       resources: {}
-  restartPolicy: OnFailure
+  restartPolicy: Never
 status: {}
