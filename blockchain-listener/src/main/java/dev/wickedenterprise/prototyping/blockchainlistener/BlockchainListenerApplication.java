@@ -2,17 +2,20 @@ package dev.wickedenterprise.prototyping.blockchainlistener;
 
 import dev.wickedenterprise.prototyping.blockchainlistener.listener.BatchContractEventPull;
 import dev.wickedenterprise.prototyping.blockchainlistener.listener.ScheduledContractEventPull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.availability.AvailabilityChangeEvent;
+import org.springframework.boot.availability.ReadinessState;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 @SpringBootApplication
 @EnableScheduling
+@Slf4j
 public class BlockchainListenerApplication implements CommandLineRunner {
 
 	public static final String topicExchangeName = "evm-events";
@@ -25,10 +28,12 @@ public class BlockchainListenerApplication implements CommandLineRunner {
 
 	private final BatchContractEventPull batchContractEventPull;
 	private final ScheduledContractEventPull scheduledContractEventPull;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
-	public BlockchainListenerApplication(BatchContractEventPull batchContractEventPull, ScheduledContractEventPull scheduledContractEventPull) {
+	public BlockchainListenerApplication(BatchContractEventPull batchContractEventPull, ScheduledContractEventPull scheduledContractEventPull, ApplicationEventPublisher applicationEventPublisher) {
 		this.batchContractEventPull = batchContractEventPull;
 		this.scheduledContractEventPull = scheduledContractEventPull;
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	public static void main(String[] args) {
@@ -37,7 +42,12 @@ public class BlockchainListenerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws InterruptedException {
-		batchContractEventPull.waitForExternalSystems();
+		boolean isReady = batchContractEventPull.waitForExternalSystems();
+		if (!isReady) {
+			log.error("Cannot start system as external systems are not available.");
+			System.exit(1);
+		}
+		AvailabilityChangeEvent.publish(applicationEventPublisher, this, ReadinessState.ACCEPTING_TRAFFIC);
 		BigInteger lastProcessedBlock = batchContractEventPull.runBatch();
 		if (!lastProcessedBlock.equals(BigInteger.ZERO)) {
 			scheduledContractEventPull.setLastProcessedBlock(lastProcessedBlock);

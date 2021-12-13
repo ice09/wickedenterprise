@@ -22,7 +22,7 @@ public class BatchContractEventPull {
         this.step = BigInteger.valueOf(10000);
     }
 
-    public void waitForExternalSystems() throws InterruptedException {
+    public boolean waitForExternalSystems() throws InterruptedException {
         boolean rabbitAvailable;
         boolean ethereumNodeAvailable;
         for (int i=0; i<100; i++) {
@@ -30,12 +30,13 @@ public class BatchContractEventPull {
             ethereumNodeAvailable = healthIndicatorUtil.isConnectedToWeb3();
             if (rabbitAvailable && ethereumNodeAvailable) {
                 log.info("Ready for Takeoff.");
-                return;
+                return true;
             } else {
                 log.info("Still waiting for external System startup, rabbitAvailable {}, web3Available {}, Try {}/100", rabbitAvailable, ethereumNodeAvailable, i);
                 Thread.sleep(5000);
             }
         }
+        return false;
     }
 
     public BigInteger runBatch()  {
