@@ -1,5 +1,6 @@
 package dev.wickedenterprise.prototyping.blockchainlistener;
 
+import dev.wickedenterprise.prototyping.blockchainlistener.listener.BatchContractEventPull;
 import dev.wickedenterprise.prototyping.blockchainlistener.listener.ContractEventPull;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -48,6 +49,15 @@ public class BlockchainListenerApplicationIntegrationTests {
 			ContractEventPull std = mock(ContractEventPull.class);
 			when(std.getCurrentBlock()).thenReturn(BigInteger.ONE);
 			return std;
+		}
+
+		@Bean
+		@Primary
+		public BatchContractEventPull mockBeanBatchContractEventPull() throws InterruptedException {
+			BatchContractEventPull bcep = mock(BatchContractEventPull.class);
+			when(bcep.runBatch()).thenReturn(BigInteger.ONE);
+			when(bcep.waitForExternalSystems()).thenReturn(true);
+			return bcep;
 		}
 
 	}
