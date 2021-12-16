@@ -18,7 +18,7 @@ public class ScheduledContractEventPull {
         this.contractEventPull = contractEventPull;
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(cron = "${blockchain.listener.schedule}")
     public void processContractEvents() {
         if (lastProcessedBlock.intValue() > 0) {
             BigInteger currentBlock = contractEventPull.getCurrentBlock();

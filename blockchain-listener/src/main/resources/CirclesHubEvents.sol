@@ -12,6 +12,10 @@ contract Hub {
         emit Trust(msg.sender, user, limit);
     }
 
+    mapping (address => address) public userToToken;
+    mapping (address => address) public tokenToUser;
+    mapping (address => bool) public organizations;
+
     mapping (address => mapping (address => uint256)) public limits;
 
 }
