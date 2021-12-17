@@ -47,7 +47,7 @@ public class BatchContractEventPull {
             if (currentBlock.compareTo(to) <= 0) {
                 to = currentBlock;
             }
-            log.debug("Processing from {} to {}", index, to);
+            log.info("Processing from {} to {}", index, to);
             try {
                 contractEventPull.readEventsFromContract(index, to);
                 log.info("Processed blocks {} to {}", index, to);

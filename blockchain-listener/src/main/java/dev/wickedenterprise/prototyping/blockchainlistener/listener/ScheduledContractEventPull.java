@@ -24,7 +24,7 @@ public class ScheduledContractEventPull {
             BigInteger currentBlock = contractEventPull.getCurrentBlock();
             if (currentBlock.intValue() > 0) {
                 if (currentBlock.intValue() > lastProcessedBlock.intValue()) {
-                    log.info("Processing blocks {} to {}", lastProcessedBlock, currentBlock);
+                    log.info("Processing Blocks {} to {}", lastProcessedBlock, currentBlock);
                     try {
                         contractEventPull.readEventsFromContract(lastProcessedBlock, currentBlock);
                         lastProcessedBlock = currentBlock;
